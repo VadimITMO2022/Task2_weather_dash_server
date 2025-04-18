@@ -5,8 +5,10 @@ import requests # библиотека чтобы делать запросы
 
 load_dotenv()  #загрузить секретные ключи
 
-API_KEY = os.getenv("API_KEY")
-API_URL = os.getenv("API_URL")
+API_KEY="9b9938037465439bbf9174353251004"
+API_URL="http://api.weatherapi.com/v1/forecast.json"
+#API_KEY = os.getenv("API_KEY")
+#API_URL = os.getenv("API_URL")
 DAYS = 1  #загрузить дни 
 LANG = 'ru' #выбрать язык
 AQI='yes'
