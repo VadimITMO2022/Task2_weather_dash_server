@@ -5,17 +5,18 @@ import requests # библиотека чтобы делать запросы
 
 load_dotenv()  #загрузить секретные ключи
 
-#API_KEY='9b9938037465439bbf9174353251004'
-#API_URL='http://api.weatherapi.com/v1/forecast.json'
 API_KEY = os.getenv("API_KEY")
 API_URL = os.getenv("API_URL")
 DAYS = 1  #загрузить дни 
 LANG = 'ru' #выбрать язык
-AQI = 'yes'
 
 '''
+city="Санкт-Петербург"
 response = requests.get(API_URL, params={'key': API_KEY, 'q': city, 'days': DAYS, 'lang': LANG}) #все данные придут в response
 data = response.json()
+
+time_now=data['current']["last_updated"]
+print(time_now)
 '''
 
 '''
@@ -80,7 +81,7 @@ print(country_name, '  ', city_name, '  ', time[0:10], '   ',time[11:16] )
 
 def load_data(city):
 
-    response = requests.get(API_URL, params={'key': API_KEY, 'q': city, 'days': DAYS, 'lang': LANG, 'aqi': AQI}) #все данные придут в response
+    response = requests.get(API_URL, params={'key': API_KEY, 'q': city, 'days': DAYS, 'lang': LANG}) #все данные придут в response
     data = response.json()
 
 
@@ -91,22 +92,24 @@ def load_data(city):
     icon = current['condition']['icon']
     condition = current['condition']['text']
     temp = current['temp_c']
-    
     hours = [h['time'][-5:] for h in forecast_hours]
-  #  temps = [h['temp_c'] for h in forecast_hours]
-  #  ap = [h['pressure_mb'] for h in forecast_hours]
-  #  humidity = [h['humidity'] for h in forecast_hours]
-  #  wind = [h['wind_kph'] for h in forecast_hours]
-  #  wind_dirs = [h['wind_degree'] for h in forecast_hours]
-    
-
+    temps = [h['temp_c'] for h in forecast_hours]
+    ap = [h['pressure_mb'] for h in forecast_hours]
+    humidity = [h['humidity'] for h in forecast_hours]
+    wind = [h['wind_kph'] for h in forecast_hours]
+    wind_dirs = [h['wind_degree'] for h in forecast_hours]
+   
     date= [h["time"][0:10] for h in forecast_hours][0]
-    co= [h["air_quality"]["co"] for h in forecast_hours]
-    no2= [h["air_quality"]["no2"] for h in forecast_hours]
-    o3= [h["air_quality"]["o3"] for h in forecast_hours]
-    so2= [h["air_quality"]["so2"] for h in forecast_hours]
-    pm2_5= [h["air_quality"]["pm2_5"] for h in forecast_hours]
-    pm10= [h["air_quality"]["pm10"] for h in forecast_hours]
+
+    co= [h["dewpoint_c"] for h in forecast_hours]
+    no2= [h["dewpoint_f"] for h in forecast_hours]
+    o3= [h["vis_km"] for h in forecast_hours]
+    so2= [h["vis_miles"] for h in forecast_hours]
+    pm2_5= [h["humidity"] for h in forecast_hours]
+    pm10= [h["gust_kph"] for h in forecast_hours]
+
+    time_now=data['current']["last_updated"]
+    
 
 
     return {"location": location,
@@ -114,11 +117,12 @@ def load_data(city):
             "icon": icon,
             "temp": temp,
             "hours": hours,
-          #  "temps": temps,
-          #  "ap": ap,
-          #  "humidity": humidity,
-          #  "wind": wind,
-          #  "wind_dirs": wind_dirs,
+            "time_now": time_now,
+            "temps": temps,
+            "ap": ap,
+            "humidity": humidity,
+            "wind": wind,
+            "wind_dirs": wind_dirs,
             "condition": condition,           
             "date": date,
             "co": co,
@@ -127,4 +131,19 @@ def load_data(city):
             "so2": so2,
             "pm2_5": pm2_5,
             "pm10": pm10}
+
+'''
+return {"location": location,
+            "city_name": city_name,
+            "icon": icon,
+            "temp": temp,
+            "hours": hours,
+            "temps": temps,
+            "ap": ap,
+            "humidity": humidity,
+            "wind": wind,
+            "wind_dirs": wind_dirs,
+            "condition": condition}
+'''
+
         
